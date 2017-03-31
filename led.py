@@ -54,20 +54,3 @@ def write_gpio(pin,val):
                 file.write(value)
                 file.close()
                 print("le fichier 'value' du pin "+ ping+" contient maintenant "+value)
-
-
-
-#programme principale
-gpio= [46,65,63,37,33,61,88,89,11,81,80,79,77,75,73,71] #tableau de GPIO utilisé
-#n=len(gpio)
-#print(n)
-
-for i in gpio:
-#       init_gpio(i,'out')
-        write_gpio(i,0)
-#    temp = read_gpio(i)
-#   print(temp)
-#print('test de la gpio 89')
-#init_gpio(89,'out')
-#write_gpio(89,0)
-#write_gpio(89,0)
