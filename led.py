@@ -1,41 +1,73 @@
 import time
 import os.path
 
+#définition des fonctions
 
 # permet de configurer une pin GPIO  en lecture ou ecriture
 def init_gpio(pin,direct):
-        ping = str(pin)
-        print('tre')
+    try:
+
+        ping = str(pin) #convertion en string
+
+        #on n'arrive pas à accèder au export de notre bbb, du coup on mis les instructions concernées en commentaire
         #if True: not os.path.exists('/sys/class/gpio/gpio'+ping):
-                #with open('/sys/class/gpio/export', 'w') as file:
-                #file = open('/sys/class/gpio/export')
-                #print('loop1')
-                #file.write(ping)
-
-        with open('/sys/class/gpio/gpio'+ping+'/direction', 'w') as file:
-                        print('modification de la direction en'+direct)
-                        file.write(direct)
+        with open('/sys/class/gpio/export', 'w') as file:
+            file.write(ping)
+            file.close()
+    except OSError:
+        print ('le pin '+ping+' a déjà été exporté')
 
 
-##permet la lecture de pin GPIO
-##def read_gpio(pin):
-##    {
-##    cd /sys/class/GPIO
-##    cd gpio+pin
-##    val = cat
-##
-##    }
+    try:
+        with open('/sys/class/gpio/gpio'+ping+'/direction', 'r') as file:
+            contenu = file.read()
+            file.close()
+            if contenu == direct:
+                print('la direction de la ping'+ping+'est déjà à '+direct)
+
+            else:
+                with open('/sys/class/gpio/gpio'+ping+'/direction', 'w') as file:
+                    file.write(direct)
+                    file.close()
+                    print('la direction de la ping '+ping+' a été mis à '+direct)
+
+    except OSError:
+        print("pas d'accès au fichier 'direction' du pin "+ping)
+        print("Peut être qu'il n'est pas encore exporté en GPIO")
 
 
-#permet l ecriture sur une pin GPIO
+#permet la lecture d'un pin GPIO
+def read_gpio(pin):
+
+        ping = str(pin)
+        with open('/sys/class/gpio/gpio'+ping+'/value', 'r') as file:
+            contenu = file.read()
+            file.close()
+        return contenu
+
+
+#permet l'ecriture sur un pin GPIO
 def write_gpio(pin,val):
         ping = str(pin)
-        value=str(val)
+        value = str(val)
         with open('/sys/class/gpio/gpio'+ping+'/value', 'w') as file:
                 file.write(value)
+                file.close()
+                print("le fichier 'value' du pin "+ ping+" contient maintenant "+value)
 
 
 
-init_gpio(30,'out')
+#programme principale
+gpio= [46,65,63,37,33,61,88,89,11,81,80,79,77,75,73,71] #tableau de GPIO utilisé
+#n=len(gpio)
+#print(n)
 
-write_gpio(30,1)
+for i in gpio:
+#       init_gpio(i,'out')
+        write_gpio(i,0)
+#    temp = read_gpio(i)
+#   print(temp)
+#print('test de la gpio 89')
+#init_gpio(89,'out')
+#write_gpio(89,0)
+#write_gpio(89,0)
